@@ -327,7 +327,7 @@ def render_html(metrics: dict, dataset: list) -> str:
 </head>
 <body>
 <header>
-    <h1>Dashboard NBCDM — Métricas de time (Plane.so)</h1>
+    <h1>Dashboard NBCDM — Métricas de time</h1>
     <p>Gerado em {_e(gerado_em)} · visão <strong>Pixel</strong> ·
     {metrics.get('total_issues', 0)} de {metrics.get('total_issues_todos', metrics.get('total_issues', 0))} issues no total</p>
 </header>
