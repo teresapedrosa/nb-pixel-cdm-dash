@@ -151,6 +151,22 @@ def get_member_by_uuid(uuid: str) -> dict | None:
     return _ASSIGNEE_MAP.get(uuid)
 
 
+def is_pixel(nome: str) -> bool:
+    """True se `nome` (já resolvido, ex. issue['assignee']) pertence a um membro da Pixel."""
+    return any(info["nome"] == nome and info["empresa"] == "Pixel" for info in TEAM.values())
+
+
+def filter_pixel_dataset(dataset: list) -> list:
+    """
+    Filtra o dataset pra só issues atribuídos a membros da Pixel — decisão do
+    dashboard nb-cdm: a visão publicada é "só Pixel" no dashboard inteiro.
+    Issues sem assignee, atribuídos à NewByte, ou fora do roster (ex. Arthur
+    Stein) ficam fora desta visão, mas continuam intactos em data/issues.json
+    — o filtro só é aplicado na hora de agregar métricas/renderizar.
+    """
+    return [d for d in dataset if is_pixel(d.get("assignee"))]
+
+
 def unresolved_team_members(members: list) -> list:
     """
     Retorna os registros de TEAM cujo e-mail NÃO aparece na lista de membros

@@ -19,12 +19,27 @@ import html as html_escape
 from datetime import datetime
 
 from . import time_utils as tu
+from . import team
 
 METRICS_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "metrics.json")
 ISSUES_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "issues.json")
 OUTPUT_PATH = os.path.join(os.path.dirname(__file__), "..", "docs", "index.html")
 
 ESTADO_ORDEM = ["In Progress", "Todo", "Backlog", "Done", "Finished", "Cancelled"]
+
+# Cor de destaque por dev — identificação visual rápida nos cards.
+# Fallback (DEFAULT_DEV_COLOR) cobre qualquer nome fora desta lista.
+DEV_COLORS = {
+    "Marcos": "#5b8def",
+    "Arthur": "#a78bfa",
+    "Felipe Chemin": "#34d399",
+    "Ritzel": "#f59e0b",
+}
+DEFAULT_DEV_COLOR = "#9aa1ac"
+
+
+def _dev_color(nome: str) -> str:
+    return DEV_COLORS.get(nome, DEFAULT_DEV_COLOR)
 
 
 def _e(value) -> str:
@@ -35,7 +50,11 @@ def _e(value) -> str:
 
 
 def _fmt_horas(v) -> str:
-    return f"{v:g}h" if v is not None else "—"
+    if v is None:
+        return "—"
+    if -0.005 < v < 0.005:  # evita "-0h" por arredondamento de valores perto de zero
+        v = 0.0
+    return f"{v:g}h"
 
 
 def _fmt_pct(v) -> str:
@@ -136,28 +155,38 @@ def _secao_processo(p: dict) -> str:
 
 
 def _secao_por_dev(por_dev: dict) -> str:
-    linhas = []
+    cards = []
     for nome, m in sorted(por_dev.items(), key=lambda kv: -(kv[1]["volume_entregue"] or 0)):
-        sp_breakdown = ", ".join(
-            f"SP{sp}: {_fmt_horas(v)}" for sp, v in m["tempo_medio_horas_por_story_point"].items()
-        ) or "—"
-        linhas.append(f"""
-        <tr>
-            <td>{_e(nome)}</td>
-            <td>{_e(m['empresa'])}</td>
-            <td>{_e(m['volume_entregue'])}</td>
-            <td>{_fmt_horas(m['cycle_time_medio_horas'])}</td>
-            <td class="sp-breakdown">{_e(sp_breakdown)}</td>
-        </tr>""")
+        cor = _dev_color(nome)
+        chips = "".join(
+            f'<span class="sp-chip">SP{sp}: {_fmt_horas(v)}</span>'
+            for sp, v in m["tempo_medio_horas_por_story_point"].items()
+        ) or '<span class="sp-chip sp-chip-vazio">sem SP registrado</span>'
+        cards.append(f"""
+        <div class="dev-card" style="--dev-color:{cor}">
+            <div class="dev-card-header">
+                <span class="dev-dot"></span>
+                <div>
+                    <div class="dev-nome">{_e(nome)}</div>
+                    <div class="dev-cargo">{_e(m['cargo'])}</div>
+                </div>
+            </div>
+            <div class="dev-stats">
+                <div class="dev-stat">
+                    <div class="dev-stat-valor">{_e(m['volume_entregue'])}</div>
+                    <div class="dev-stat-label">entregues</div>
+                </div>
+                <div class="dev-stat">
+                    <div class="dev-stat-valor">{_fmt_horas(m['cycle_time_medio_horas'])}</div>
+                    <div class="dev-stat-label">cycle time médio</div>
+                </div>
+            </div>
+            <div class="dev-chips">{chips}</div>
+        </div>""")
     return f"""
     <section>
-        <h2>Por desenvolvedor</h2>
-        <table class="tabela-dev">
-            <thead>
-                <tr><th>Dev</th><th>Empresa</th><th>Entregues</th><th>Cycle time médio</th><th>Tempo médio por SP</th></tr>
-            </thead>
-            <tbody>{"".join(linhas)}</tbody>
-        </table>
+        <h2>Por desenvolvedor <span class="h2-sub">(Pixel)</span></h2>
+        <div class="dev-grid">{"".join(cards)}</div>
     </section>"""
 
 
@@ -213,17 +242,37 @@ main { max-width: 1100px; margin: 0 auto; padding: 24px; }
 section { margin-bottom: 40px; }
 h2 { font-size: 16px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-dim);
     border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 16px; }
+h2 .h2-sub { text-transform: none; letter-spacing: 0; font-size: 12px; opacity: .7; }
 h3 { font-size: 14px; color: var(--text-dim); margin: 24px 0 12px; }
 .kpi-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; text-align:center; }
+.kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px;
+    text-align:center; transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
+.kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,.35); border-color: var(--accent); }
 .kpi-valor { font-size: 32px; font-weight: 700; color: var(--accent); }
 .kpi-label { font-size: 13px; margin-top: 4px; }
 .kpi-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
 .metric-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: 12px; }
-.metric-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+.metric-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px;
+    transition: transform .15s ease, border-color .15s ease; }
+.metric-card:hover { transform: translateY(-2px); border-color: var(--accent); }
 .metric-valor { font-size: 20px; font-weight: 600; }
 .metric-label { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
 .metric-sub { font-size: 11px; color: var(--text-dim); }
+.dev-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 16px; }
+.dev-card { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--dev-color);
+    border-radius: 10px; padding: 18px; transition: transform .15s ease, box-shadow .15s ease; }
+.dev-card:hover { transform: translateY(-3px) scale(1.01); box-shadow: 0 10px 24px rgba(0,0,0,.4); }
+.dev-card-header { display:flex; align-items:center; gap:10px; margin-bottom: 14px; }
+.dev-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--dev-color); flex-shrink:0; }
+.dev-nome { font-size: 15px; font-weight: 600; }
+.dev-cargo { font-size: 12px; color: var(--text-dim); }
+.dev-stats { display:flex; gap: 20px; margin-bottom: 14px; }
+.dev-stat-valor { font-size: 22px; font-weight: 700; color: var(--dev-color); }
+.dev-stat-label { font-size: 11px; color: var(--text-dim); }
+.dev-chips { display:flex; flex-wrap:wrap; gap: 6px; }
+.sp-chip { font-size: 11px; padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,.06);
+    border: 1px solid var(--border); color: var(--text-dim); }
+.sp-chip-vazio { opacity: .6; font-style: italic; }
 .bar-chart { display:flex; flex-direction:column; gap:8px; }
 .bar-row { display:flex; align-items:center; gap:10px; font-size:13px; }
 .bar-label { width: 70px; color: var(--text-dim); }
@@ -235,6 +284,9 @@ h3 { font-size: 14px; color: var(--text-dim); margin: 24px 0 12px; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
 th { color: var(--text-dim); font-weight: 500; }
+.tabela-issues tbody tr { transition: background-color .1s ease; }
+.tabela-issues tbody tr:nth-child(even) { background: rgba(255,255,255,.02); }
+.tabela-issues tbody tr:hover { background: rgba(91,141,239,.1); }
 .sp-breakdown { color: var(--text-dim); font-size: 12px; }
 .badge { padding: 2px 8px; border-radius: 999px; font-size: 11px; white-space:nowrap; }
 .estado-backlog { background:#2a2e38; color:#9aa1ac; }
@@ -276,12 +328,13 @@ def render_html(metrics: dict, dataset: list) -> str:
 <body>
 <header>
     <h1>Dashboard NBCDM — Métricas de time (Plane.so)</h1>
-    <p>Gerado em {_e(gerado_em)} · {metrics.get('total_issues', 0)} issues no total</p>
+    <p>Gerado em {_e(gerado_em)} · visão <strong>Pixel</strong> ·
+    {metrics.get('total_issues', 0)} de {metrics.get('total_issues_todos', metrics.get('total_issues', 0))} issues no total</p>
 </header>
 <main>
     {_kpi_cards(metrics['kpis_topo'])}
-    {_secao_processo(metrics['processo'])}
     {_secao_por_dev(metrics['por_dev'])}
+    {_secao_processo(metrics['processo'])}
     {_secao_tabela_issues(dataset)}
 </main>
 <footer>nb-cdm · dashboard estático, publicado via GitHub Pages · datas em dd/mm/aaaa</footer>
@@ -305,6 +358,7 @@ def save_html(content: str, path: str = OUTPUT_PATH):
 if __name__ == "__main__":
     print("Carregando métricas e dataset...")
     metrics = load_json(METRICS_PATH)
-    dataset = load_json(ISSUES_PATH)
+    dataset = team.filter_pixel_dataset(load_json(ISSUES_PATH))
+    print(f"Filtro Pixel-only aplicado na tabela de tickets: {len(dataset)} issues")
     html_out = render_html(metrics, dataset)
     save_html(html_out)

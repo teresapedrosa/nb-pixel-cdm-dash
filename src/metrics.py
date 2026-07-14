@@ -98,9 +98,12 @@ def metricas_por_dev(dataset: list) -> dict:
     """
     Só para membros com papel 'dev' (team.devs()) — PMs/POs não entram
     aqui, só nas atribuições de acompanhamento (conforme README).
+
+    Só devs da Pixel (`team.pixel_devs()`) — decisão do dashboard nb-cdm:
+    a visão publicada é "só Pixel". NewByte fica fora dos cards por dev.
     """
     resultado = {}
-    for slug, info in team.devs().items():
+    for slug, info in team.pixel_devs().items():
         nome = info["nome"]
         issues_dev = [d for d in dataset if d.get("assignee") == nome]
         finished_dev = [d for d in issues_dev if d.get("entrou_finished_em")]
@@ -124,12 +127,18 @@ def metricas_por_dev(dataset: list) -> dict:
     return resultado
 
 
-def build_metrics(dataset: list) -> dict:
+def build_metrics(dataset: list, total_issues_todos: int | None = None) -> dict:
+    """
+    `dataset` já deve vir filtrado pro escopo publicado (ver
+    team.filter_pixel_dataset). `total_issues_todos`, se informado, guarda
+    o total antes do filtro — só pra contexto no rodapé do dashboard.
+    """
     return {
         "kpis_topo": kpis_topo(dataset),
         "processo": metricas_processo(dataset),
         "por_dev": metricas_por_dev(dataset),
         "total_issues": len(dataset),
+        "total_issues_todos": total_issues_todos if total_issues_todos is not None else len(dataset),
     }
 
 
@@ -147,8 +156,10 @@ def load_dataset(path: str = DATA_PATH) -> list:
 
 if __name__ == "__main__":
     print("Carregando dataset e agregando métricas...")
-    ds = load_dataset()
-    metrics = build_metrics(ds)
+    ds_completo = load_dataset()
+    ds = team.filter_pixel_dataset(ds_completo)
+    print(f"Filtro Pixel-only: {len(ds)}/{len(ds_completo)} issues (visão publicada)")
+    metrics = build_metrics(ds, total_issues_todos=len(ds_completo))
     save_metrics(metrics)
 
     print("\n--- KPIs de topo ---")
