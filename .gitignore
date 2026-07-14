@@ -1,0 +1,22 @@
+# Ambiente virtual
+venv/
+.venv/
+
+# Credenciais — nunca versionar
+.env
+
+# Cache Python
+__pycache__/
+*.pyc
+
+# Dados locais (cache incremental e datasets brutos) — não versionar.
+# O que importa pro GitHub Pages é só docs/index.html.
+data/*.json
+!data/.gitkeep
+
+# Outputs locais (reports/exports gerados)
+outputs/*
+!outputs/.gitkeep
+
+# Logs do script de sync agendado (scripts/sync_and_publish.bat)
+logs/

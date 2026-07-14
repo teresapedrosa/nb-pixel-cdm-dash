@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard NBCDM</title>
+<style>
+:root {
+    --bg: #0f1115; --card: #171a21; --border: #2a2e38; --text: #e6e8ec;
+    --text-dim: #9aa1ac; --accent: #5b8def; --ok: #4caf7d; --warn: #d9a441; --bad: #d9534f;
+}
+* { box-sizing: border-box; }
+body { margin:0; padding:0 0 60px; background:var(--bg); color:var(--text);
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+header { padding: 32px 24px 16px; border-bottom: 1px solid var(--border); }
+header h1 { margin:0 0 4px; font-size: 22px; }
+header p { margin:0; color: var(--text-dim); font-size: 13px; }
+main { max-width: 1100px; margin: 0 auto; padding: 24px; }
+section { margin-bottom: 40px; }
+h2 { font-size: 16px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-dim);
+    border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 16px; }
+h3 { font-size: 14px; color: var(--text-dim); margin: 24px 0 12px; }
+.kpi-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; text-align:center; }
+.kpi-valor { font-size: 32px; font-weight: 700; color: var(--accent); }
+.kpi-label { font-size: 13px; margin-top: 4px; }
+.kpi-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+.metric-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: 12px; }
+.metric-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+.metric-valor { font-size: 20px; font-weight: 600; }
+.metric-label { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+.metric-sub { font-size: 11px; color: var(--text-dim); }
+.bar-chart { display:flex; flex-direction:column; gap:8px; }
+.bar-row { display:flex; align-items:center; gap:10px; font-size:13px; }
+.bar-label { width: 70px; color: var(--text-dim); }
+.bar-track { flex:1; background: var(--border); border-radius: 4px; height: 14px; overflow:hidden; }
+.bar-fill { background: var(--accent); height: 100%; }
+.bar-valor { width: 24px; text-align:right; }
+.tipo-grid { display:flex; gap: 20px; }
+.tipo-item { display:flex; align-items:center; gap:8px; font-size: 14px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+th { color: var(--text-dim); font-weight: 500; }
+.sp-breakdown { color: var(--text-dim); font-size: 12px; }
+.badge { padding: 2px 8px; border-radius: 999px; font-size: 11px; white-space:nowrap; }
+.estado-backlog { background:#2a2e38; color:#9aa1ac; }
+.estado-todo { background:#2a3a55; color:#8fb4ff; }
+.estado-in-progress { background:#4a3a1f; color:var(--warn); }
+.estado-done { background:#1f3d31; color:var(--ok); }
+.estado-finished { background:#173d2a; color:#5fd394; }
+.estado-cancelled { background:#3d1f1f; color:var(--bad); }
+.tipo-bug { background:#3d1f1f; color:var(--bad); }
+.tipo-fix { background:#3a3520; color:var(--warn); }
+.tipo-feature { background:#1f2d3d; color:var(--accent); }
+.nota { font-size: 12px; color: var(--text-dim); }
+#filtro-titulo { width:100%; padding:8px 10px; margin-bottom:12px; background:var(--card);
+    border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:13px; }
+footer { text-align:center; color: var(--text-dim); font-size: 12px; padding: 24px; }
+</style>
+</head>
+<body>
+<header>
+    <h1>Dashboard NBCDM — Métricas de time (Plane.so)</h1>
+    <p>Gerado em 14/07/2026 16:57 · 136 issues no total</p>
+</header>
+<main>
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-valor">123</div>
+            <div class="kpi-label">Tickets concluídos</div>
+            <div class="kpi-sub">chegaram a Finished</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-valor">187</div>
+            <div class="kpi-label">Story points entregues</div>
+            <div class="kpi-sub">issues em Finished, com SP</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-valor">14</div>
+            <div class="kpi-label">Tickets em aberto</div>
+            <div class="kpi-sub">fora de Finished/Cancelled</div>
+        </div></div>
+    
+    <section>
+        <h2>Processo</h2>
+        <div class="metric-grid">
+        <div class="metric-card">
+            <div class="metric-valor">1041.41h</div>
+            <div class="metric-label">Lead time médio</div>
+            <div class="metric-sub">criação → Finished · n=123</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-valor">69.36h</div>
+            <div class="metric-label">Cycle time médio</div>
+            <div class="metric-sub">In Progress → Done · n=35</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-valor">0.56h</div>
+            <div class="metric-label">  ↳ com fallback (Todo→Done)</div>
+            <div class="metric-sub">pulou In Progress · n=1</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-valor">886.4h</div>
+            <div class="metric-label">Homologação NewByte</div>
+            <div class="metric-sub">Done → Finished · n=73</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-valor">3</div>
+            <div class="metric-label">WIP</div>
+            <div class="metric-sub">issues em In Progress</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-valor">8 (5.9%)</div>
+            <div class="metric-label">Retrabalho</div>
+            <div class="metric-sub">4 por reabertura · 4 por vínculo</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-valor">1</div>
+            <div class="metric-label">Issues parados</div>
+            <div class="metric-sub">acima do limiar configurado</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-valor">0</div>
+            <div class="metric-label">Oversized (SP 13+)</div>
+            <div class="metric-sub">candidatos a quebrar em sub-tickets</div>
+        </div></div>
+        <h3>Throughput por mês (issues que chegaram a Finished)</h3>
+        <div class="bar-chart">
+        <div class="bar-row">
+            <div class="bar-label">2026-07</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-valor">123</div>
+        </div></div>
+        <h3>Quebra por tipo</h3>
+        <div class="tipo-grid"><div class="tipo-item"><span class="badge tipo-bug">bug</span> <span>1</span></div><div class="tipo-item"><span class="badge tipo-fix">fix</span> <span>0</span></div><div class="tipo-item"><span class="badge tipo-feature">feature</span> <span>135</span></div></div>
+    </section>
+    
+    <section>
+        <h2>Por desenvolvedor</h2>
+        <table class="tabela-dev">
+            <thead>
+                <tr><th>Dev</th><th>Empresa</th><th>Entregues</th><th>Cycle time médio</th><th>Tempo médio por SP</th></tr>
+            </thead>
+            <tbody>
+        <tr>
+            <td>Marcos</td>
+            <td>Pixel</td>
+            <td>69</td>
+            <td>47.3h</td>
+            <td class="sp-breakdown">SP2: 0h, SP3: 11.9h, SP5: 55.01h, SP8: 89.84h</td>
+        </tr>
+        <tr>
+            <td>Arthur</td>
+            <td>Pixel</td>
+            <td>49</td>
+            <td>98.77h</td>
+            <td class="sp-breakdown">SP2: 2.94h, SP3: 9.65h, SP5: 161.32h, SP8: 365.28h</td>
+        </tr>
+        <tr>
+            <td>Felipe Chemin</td>
+            <td>NewByte</td>
+            <td>0</td>
+            <td>—</td>
+            <td class="sp-breakdown">—</td>
+        </tr>
+        <tr>
+            <td>Ritzel</td>
+            <td>NewByte</td>
+            <td>0</td>
+            <td>—</td>
+            <td class="sp-breakdown">—</td>
+        </tr></tbody>
+        </table>
+    </section>
+    
+    <section>
+        <h2>Tickets (136)</h2>
+        <p class="nota">* cycle time calculado com fallback Todo → Done (ticket pulou In Progress).
+        Só título — descrição e resolução ficam no dataset completo, fora desta tabela.</p>
+        <input type="text" id="filtro-titulo" placeholder="Filtrar por título..." oninput="filtrarTabela()">
+        <table class="tabela-issues" id="tabela-issues">
+            <thead>
+                <tr>
+                    <th>Título</th><th>Estado</th><th>Assignee</th><th>SP</th><th>Tipo</th>
+                    <th>Cycle time</th><th>Retrabalho</th><th>Parado</th><th>Finished em</th>
+                </tr>
+            </thead>
+            <tbody>
+        <tr data-estado="In Progress" data-tipo="feature">
+            <td>Available Listings — max_price deve usar o filtro nativo do Guesty com a currency vinda da request (reverte a resolução por-unit da NBCDM-132)</td>
+            <td><span class="badge estado-in-progress">In Progress</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>
+        <tr data-estado="In Progress" data-tipo="feature">
+            <td>Documentação de observabilidade e navegação</td>
+            <td><span class="badge estado-in-progress">In Progress</span></td>
+            <td>Marcos</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>
+        <tr data-estado="In Progress" data-tipo="feature">
+            <td>Inconsistência no nome das OTAs</td>
+            <td><span class="badge estado-in-progress">In Progress</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>Sim</td>
+            <td>—</td>
+        </tr>
+        <tr data-estado="Backlog" data-tipo="feature">
+            <td>Alterar subscription CloudAMQP para paid subscription antes de prod</td>
+            <td><span class="badge estado-backlog">Backlog</span></td>
+            <td>Tiago</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>
+        <tr data-estado="Done" data-tipo="feature">
+            <td>Add create payment support for guesty</td>
+            <td><span class="badge estado-done">Done</span></td>
+            <td>Marcos</td>
+            <td>5</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>
+        <tr data-estado="Done" data-tipo="feature">
+            <td>Add delete payment support for guesty</td>
+            <td><span class="badge estado-done">Done</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>Sim</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>
+        <tr data-estado="Done" data-tipo="feature">
+            <td>Add update payment support for guesty</td>
+            <td><span class="badge estado-done">Done</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>Sim</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>
+        <tr data-estado="Done" data-tipo="feature">
+            <td>Add update reservation support for guesty</td>
+            <td><span class="badge estado-done">Done</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>Sim</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>
+        <tr data-estado="Done" data-tipo="feature">
+            <td>CDM Available Listings: max_price currency must resolve per-unit (not hardcoded BRL)</td>
+            <td><span class="badge estado-done">Done</span></td>
+            <td>Marcos</td>
+            <td>5</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>18.53h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>
+        <tr data-estado="Done" data-tipo="feature">
+            <td>CDM: surface Stays commercial_priority onto Unit and enable commercial_priority sort</td>
+            <td><span class="badge estado-done">Done</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>1.03h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>
+        <tr data-estado="Done" data-tipo="feature">
+            <td>Have a way to get message attachments via the API</td>
+            <td><span class="badge estado-done">Done</span></td>
+            <td>Arthur</td>
+            <td>5</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>149.16h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>13/07/2026</td>
+        </tr>
+        <tr data-estado="Done" data-tipo="feature">
+            <td>Stays listing.updated não propaga para o CDM Unit (unidades sem property não são atualizadas; happy-path descarta campos)</td>
+            <td><span class="badge estado-done">Done</span></td>
+            <td>Arthur</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>24.41h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>
+        <tr data-estado="Done" data-tipo="feature">
+            <td>fix: mapear ota_channel para tenants Guesty</td>
+            <td><span class="badge estado-done">Done</span></td>
+            <td>Marcos</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>
+        <tr data-estado="Done" data-tipo="feature">
+            <td>refatorar o diretório de handlers do event_processor</td>
+            <td><span class="badge estado-done">Done</span></td>
+            <td>Arthur</td>
+            <td>8</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>365.28h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>/calendar-blocks retornando vazio</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Add PgBouncer connection pooler via CNPG Pooler CRD</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Add booking_engine_client_secret and booking_engine_client_id to guesty config</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Add caching for guesty tokens</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Add communication endpoints to Stays</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Add sync to Ayrton</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>74.52h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Adicionar cadastro da CoreAPI para a Guesty</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>5</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Adiconar reservation_id e unit_id ao endpoint de mensagens</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Ajustes nos bloqueios</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Alterações nos webhooks</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>-0h</td>
+            <td>Sim</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Automatic tests</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Bloqueios continuam iguais depois de excluir eles na Stays</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>CNPG Syncing problem</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Calendar &amp; Available Listings Endpoints</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>5</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>91.49h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Calendar &amp; Available Listings — fixes from CDM review (R1–R9)</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>02/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Calendar endpoint: daily availability view per unit</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Campos channel e source inconsistentes</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>69.18h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Campos das mensagens retornando sent_at e delivered_at retornando em utc -3</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>1</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Check unit availability by date</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Configurar gateway para autenticação da Guesty</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>3.91h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Configure Cloudflare DNS for cluster domains</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Conversas duplicadas</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Core API — &quot;fields&quot; query param for sparse get reservation &amp; get unit</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>13/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>CoreAPI tenant validator</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Criar bloqueios na Guesty</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>25.7h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Database automatic backup</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Database problem</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Debug and fix inconsistencies in payments</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Definir representação de amenities no CDM</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>50.44h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Deploy PassBolt on the k8s cluster for credential management</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Erro Conversation not linked to Stays SMM voltou</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Evaluate and implement Svix for webhook delivery to client apps</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>217.49h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>FIlter hookdeck events</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>—</td>
+            <td>1</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>FIx messages</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Fix communication</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Fix deleted/cancelled webhook</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Fix duplicate messages</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Fix get reservations filter by status</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Fix hardcoded unit status</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Fix map property from Stays property endpoint and resolve listing clone on reservation</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Fix missing fields from the CDM schema.</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Fix owner mapping: read from listing instead of property</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Fix reservations date filters</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Fix unit amenities: rename amenities_override and map listing amenities from Stays</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Fix unit and property photos: use correct image URL field from Stays</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Fix update reservation endpoint (error 500)</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Fix webhook conversas</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Fix wrong keys in property/unit mapper</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Format atributes of dates object within get reservations response to use timestamptz</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>GET reservation ignora o tenant do path - acesso cross-tenant por confirmation code</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>0.56h *</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Get a single conversation by ID via the API</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>0.76h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>13/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Guesty Communication</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>0.62h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Guesty backfil</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>5</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>44.05h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="bug">
+            <td>Guesty reservation.new problem</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-bug">bug</span></td>
+            <td>23.08h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Implement SSL certificates for all web applications</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Implement calendar blocks creation on CDM</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Implement endpoints for person entity</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Implement filter reservations by status (confirmed, cancelled...)</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Implement new filters for reservations retrieving</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>25.85h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Implement search at the reservation level + cascade parent entities in the response</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>20.88h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Implementar deleção de bloqueios da Guesty</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>2.71h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Implementar particionamento para calendar_blocks</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Improving agent reviewer</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>06/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Integrar AI Workflow ao repo</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Migrate to CNPG v18</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>5</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Monitor disk usage for logs → migrate to cold storage (Mimir + Backblaze) when needed</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>195.88h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Move owner and house_rules from property to unit level</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Mudanças no modelo de reservas</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Normalize channels</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Observações na API de comunicações</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Padronizar identidade das entidades no CDM (Parte 2)</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>5</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>Sim</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Padronizar identidade das entidades no CDM (pms + external_ids)</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>8</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>89.84h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>13/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Passar o RabbiMQ para instância gerenciada</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>—</td>
+            <td>1</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Persistir token do cliente guesty do event processor</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>13/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Plan and implement diff calculation events</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Populate &quot;breakdown&quot; field with Stays reservation taxes</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Prepare list of indexed fields per entity → send to Thiago for validation</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>16.67h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Processor optimizations</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Propose initial fields for reservation indexing</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Recreate tenant endpoint</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>-0h</td>
+            <td>Sim</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Reduce alert noise before plugging monitoring into client&#x27;s Discord</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Refactor codebase</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Remove conversations from backfil</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>1</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Repassar erros do PMS nas chamadas &quot;proxy&quot; da core API</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Replace property_id with unit_id in conversation entity</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Request de enviar mensagens retornando &quot;Conversation not linked to Stays SMM&quot;</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Request property report from Thiago → mount 6-week rollout schedule for go subscriptions</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Reserva: campo `source` ausente - o `partner` do Stays é descartado no mapeamento</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>-0h</td>
+            <td>Sim</td>
+            <td>—</td>
+            <td>13/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Return internalNote when retrieving reservations</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Return owner object with name and phone when retrieving properties</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Return time and time zone when retrieving reservations</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Revisar integração com a Guesty: reservas, imóveis e mensagens</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Revisar se o endereço está com campos padrões entre os pms&#x27;s</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>2.94h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Salvar os attachments de communication em um bucket no S3</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>5</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>290.75h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Self-host hookdeck outpost</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>5</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Separação de tópicos no redpanda</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>72.13h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Solution Strategy - AI Code Review and Tests</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>5</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Start Guesty integration (https://www.guesty.com)</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>8</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Stays - Arquivos enviados pelo guest não estão sendo registrados no CDM</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>24.93h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Stays tem um check que retorna &quot;Validation failed for Stays config&quot;, o mesmo precisa acontecer na Guesty e no Ayrton</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>—</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>03/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Store and retrieve properties by external IDs</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Store and retrieve reservation by external IDs</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>21.65h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Sync new tenant</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Text opcional no post &quot;Send Message&quot;</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Tirar outras entidades do search /reservations</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Unificar clientes/serviços dos PMSs</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>5</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>13/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Unify pricing mapping between reservation create and update</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Units without a property — home for address &amp; currency</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>0h</td>
+            <td>Sim</td>
+            <td>—</td>
+            <td>13/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Verify creation webhook</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Work on edge cases</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Write endpoint - Stays - Implement reservation observation/notes update</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>124.11h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>Write endpoint - Stays - Implement reservation payment status update</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>167.79h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>add partitions to messages and conversations tables</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>config now deletes tenant entries on default</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>e2e tests</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>fix reservation discrepancy</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>18.45h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>fix: return paginated response on units calendar endpoint</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>2</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>guest_id e person_id na mensagem</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Marcos</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>implement Person entity resolution before Guest creation</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>3</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>mudar filtro do GET /booking/{tenant_id}/calendar-blocks de property_id para unit_id</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>—</td>
+            <td>1</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>newbyte-demo não dispara webhoks de novas mensagens</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>193.33h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr>
+        <tr data-estado="Finished" data-tipo="feature">
+            <td>verify tests</td>
+            <td><span class="badge estado-finished">Finished</span></td>
+            <td>Arthur</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>01/07/2026</td>
+        </tr></tbody>
+        </table>
+    </section>
+</main>
+<footer>nb-cdm · dashboard estático, publicado via GitHub Pages · datas em dd/mm/aaaa</footer>
+<script>
+function filtrarTabela() {
+    const termo = document.getElementById('filtro-titulo').value.toLowerCase();
+    document.querySelectorAll('#tabela-issues tbody tr').forEach(tr => {
+        const titulo = tr.children[0].textContent.toLowerCase();
+        tr.style.display = titulo.includes(termo) ? '' : 'none';
+    });
+}
+</script>
+</body>
+</html>
