@@ -84,8 +84,8 @@ footer { text-align:center; color: var(--text-dim); font-size: 12px; padding: 24
 <body>
 <header>
     <h1>Dashboard NBCDM — Métricas de time</h1>
-    <p>Gerado em 16/07/2026 18:46 · visão <strong>Pixel</strong> ·
-    133 de 140 issues no total</p>
+    <p>Gerado em 17/07/2026 17:53 · visão <strong>Pixel</strong> ·
+    134 de 152 issues no total</p>
 </header>
 <main>
     <div class="kpi-grid">
@@ -100,7 +100,7 @@ footer { text-align:center; color: var(--text-dim); font-size: 12px; padding: 24
             <div class="kpi-sub">issues em Finished, com SP</div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-valor">16</div>
+            <div class="kpi-valor">17</div>
             <div class="kpi-label">Tickets em aberto</div>
             <div class="kpi-sub">fora de Finished/Cancelled</div>
         </div></div>
@@ -122,11 +122,11 @@ footer { text-align:center; color: var(--text-dim); font-size: 12px; padding: 24
                     <div class="dev-stat-label">entregues</div>
                 </div>
                 <div class="dev-stat">
-                    <div class="dev-stat-valor">45.93h</div>
+                    <div class="dev-stat-valor">45.03h</div>
                     <div class="dev-stat-label">cycle time médio</div>
                 </div>
             </div>
-            <div class="dev-chips"><span class="sp-chip">SP2: 0h</span><span class="sp-chip">SP3: 11.9h</span><span class="sp-chip">SP5: 42.87h</span><span class="sp-chip">SP8: 89.84h</span></div>
+            <div class="dev-chips"><span class="sp-chip">SP2: 0h</span><span class="sp-chip">SP3: 11.9h</span><span class="sp-chip">SP5: 38.67h</span><span class="sp-chip">SP8: 89.84h</span></div>
         </div>
         <div class="dev-card" style="--dev-color:#a78bfa">
             <div class="dev-card-header">
@@ -159,9 +159,9 @@ footer { text-align:center; color: var(--text-dim); font-size: 12px; padding: 24
             <div class="metric-sub">criação → Finished · n=118</div>
         </div>
         <div class="metric-card">
-            <div class="metric-valor">66.14h</div>
+            <div class="metric-valor">65.09h</div>
             <div class="metric-label">Cycle time médio</div>
-            <div class="metric-sub">In Progress → Done · n=37</div>
+            <div class="metric-sub">In Progress → Done · n=38</div>
         </div>
         <div class="metric-card">
             <div class="metric-valor">—</div>
@@ -179,9 +179,9 @@ footer { text-align:center; color: var(--text-dim); font-size: 12px; padding: 24
             <div class="metric-sub">issues em In Progress</div>
         </div>
         <div class="metric-card">
-            <div class="metric-valor">8 (6.0%)</div>
+            <div class="metric-valor">9 (6.7%)</div>
             <div class="metric-label">Retrabalho</div>
-            <div class="metric-sub">4 por reabertura · 4 por vínculo</div>
+            <div class="metric-sub">4 por reabertura · 5 por vínculo</div>
         </div>
         <div class="metric-card">
             <div class="metric-valor">2</div>
@@ -201,11 +201,11 @@ footer { text-align:center; color: var(--text-dim); font-size: 12px; padding: 24
             <div class="bar-valor">118</div>
         </div></div>
         <h3>Quebra por tipo</h3>
-        <div class="tipo-grid"><div class="tipo-item"><span class="badge tipo-bug">bug</span> <span>1</span></div><div class="tipo-item"><span class="badge tipo-fix">fix</span> <span>0</span></div><div class="tipo-item"><span class="badge tipo-feature">feature</span> <span>132</span></div></div>
+        <div class="tipo-grid"><div class="tipo-item"><span class="badge tipo-bug">bug</span> <span>1</span></div><div class="tipo-item"><span class="badge tipo-fix">fix</span> <span>0</span></div><div class="tipo-item"><span class="badge tipo-feature">feature</span> <span>133</span></div></div>
     </section>
     
     <section>
-        <h2>Tickets (133)</h2>
+        <h2>Tickets (134)</h2>
         <p class="nota">* cycle time calculado com fallback Todo → Done (ticket pulou In Progress).
         Só título — descrição e resolução ficam no dataset completo, fora desta tabela.</p>
         <input type="text" id="filtro-titulo" placeholder="Filtrar por título..." oninput="filtrarTabela()">
@@ -218,6 +218,17 @@ footer { text-align:center; color: var(--text-dim); font-size: 12px; padding: 24
             </thead>
             <tbody>
         <tr data-estado="In Progress" data-tipo="feature">
+            <td>146.1 — Publicar eventos com tenant_id real e tornar o consumer outbound confiável</td>
+            <td><span class="badge estado-in-progress">In Progress</span></td>
+            <td>Marcos</td>
+            <td>—</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>—</td>
+            <td>Sim</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>
+        <tr data-estado="In Progress" data-tipo="feature">
             <td>Backfill do resync trava em rate limit e reporta sucesso com dados parciais</td>
             <td><span class="badge estado-in-progress">In Progress</span></td>
             <td>Arthur</td>
@@ -226,17 +237,6 @@ footer { text-align:center; color: var(--text-dim); font-size: 12px; padding: 24
             <td>—</td>
             <td>—</td>
             <td>Sim</td>
-            <td>—</td>
-        </tr>
-        <tr data-estado="In Progress" data-tipo="feature">
-            <td>Communication — correlation_id opcional nas mensagens para o serviço reconhecer a própria mensagem no echo</td>
-            <td><span class="badge estado-in-progress">In Progress</span></td>
-            <td>Marcos</td>
-            <td>—</td>
-            <td><span class="badge tipo-feature">feature</span></td>
-            <td>—</td>
-            <td>—</td>
-            <td>—</td>
             <td>—</td>
         </tr>
         <tr data-estado="In Progress" data-tipo="feature">
@@ -334,6 +334,17 @@ footer { text-align:center; color: var(--text-dim); font-size: 12px; padding: 24
             <td>—</td>
             <td><span class="badge tipo-feature">feature</span></td>
             <td>1.03h</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>
+        <tr data-estado="Done" data-tipo="feature">
+            <td>Communication — correlation_id opcional nas mensagens para o serviço reconhecer a própria mensagem no echo</td>
+            <td><span class="badge estado-done">Done</span></td>
+            <td>Marcos</td>
+            <td>5</td>
+            <td><span class="badge tipo-feature">feature</span></td>
+            <td>26.08h</td>
             <td>—</td>
             <td>—</td>
             <td>—</td>
